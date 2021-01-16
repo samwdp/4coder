@@ -1,9 +1,9 @@
-lib/*
+lib/4coder-clearfeld/*
 4ed
 4ed_app.so
 4ed.exe
 changes.txt
-custom
+custom/*
 custom_4coder.so
 custom_4coder.dll
 fonts/*

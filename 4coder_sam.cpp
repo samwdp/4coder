@@ -3,7 +3,7 @@
 
 #include "4coder_default_include.cpp"
 
-#include "../lib/4coder-clearfeld/packages/relative_line_number_mode/relative_line_number_mode.cpp"
+#include "lib/4coder-clearfeld/packages/relative_line_number_mode/relative_line_number_mode.cpp"
 
 #if !defined(META_PASS)
 #include "generated/managed_id_metadata.cpp"
