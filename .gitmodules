@@ -1,0 +1,6 @@
+[submodule "lib/external/4coder-clearfeld"]
+	path = lib/external/4coder-clearfeld
+	url = https://github.com/samwdp/4coder-clearfeld
+[submodule "lib/external/4coder-vimmish"]
+	path = lib/external/4coder-clearfeld
+	url = https://github.com/samwdp/4coder-vimmish
