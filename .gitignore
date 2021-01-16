@@ -1,0 +1,12 @@
+lib/*
+4ed
+4ed_app.so
+4ed.exe
+changes.txt
+custom
+custom_4coder.so
+custom_4coder.dll
+fonts/*
+LICENSE.txt
+README.txt
+themes/*
