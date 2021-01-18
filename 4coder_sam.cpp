@@ -11,6 +11,7 @@
 #include "lib/external/4coder-clearfeld/packages/relative_line_number_mode/relative_line_number_mode.cpp"
 
 #include "lib/external/4coder-vimmish/4coder_vimmish.cpp"
+#include "lib/project_lister.cpp"
 
 #if !defined(META_PASS)
 #include "generated/managed_id_metadata.cpp"
@@ -547,6 +548,7 @@ custom_setup_default_mapping(Application_Links* app, Mapping *mapping, Vim_Key v
     VimBind(vim_jump_to_definition_under_cursor,                 vim_key(KeyCode_RightBracket, KeyCode_Control));
     
     VimNameBind(string_u8_litexpr("Project"),                    vim_leader, vim_key(KeyCode_P));
+    VimBind(project_lister,                                        vim_leader, vim_key(KeyCode_P), vim_key(KeyCode_P));
     VimBind(load_project,                                        vim_leader, vim_key(KeyCode_P), vim_key(KeyCode_O));
     
     VimNameBind(string_u8_litexpr("Buffer"),                    vim_leader, vim_key(KeyCode_B));
