@@ -21,9 +21,28 @@ struct Project_Lister_Result
     b32 success;
     i32 index;
 };
-/////////////////////////
-#include "external/SimpleJSON/src/JSON.h"
 
+struct sam_project_line
+{
+    char *dir;
+    char *name;
+    char *project_file_name
+};
+
+struct sam_project_array
+{
+    sam_project_line *project_lines;
+    i32 count;
+};
+
+struct sam_project
+{
+    
+};
+
+
+/////////////////////////
+global char *project_file_path = "/home/sam/.bin/4coder/project.json";
 global Project_File project_file = {};
 
 function void add_project_to_file(Application_Links *app, Project *project, Arena *arena)
@@ -50,6 +69,22 @@ function void add_project_to_file(Application_Links *app, Project *project, Aren
 function void parse_project_file(Application_Links *app, Arena *arena)
 {
     // TODO(Sam): Actually read from a file
+    FILE *projects = fopen(project_file_path, "r");
+    
+    char *json_file;
+    long length;
+    if (projects)
+    {
+        fseek (projects, 0, SEEK_END);
+        length = ftell (projects);
+        fseek (projects, 0, SEEK_SET);
+        json_file = (char*)malloc ((length+1)*sizeof(char));
+        if (json_file)
+        {
+            fread (json_file, sizeof(char), length, projects);
+        }
+        fclose (projects);
+    }
     
     project_file.project_array.count = 1;
     project_file.project_array.project_files = push_array(arena, Project_Line, 1);
