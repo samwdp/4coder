@@ -50,6 +50,7 @@ function void add_project_to_file(Application_Links *app, Project *project, Aren
 function void parse_project_file(Application_Links *app, Arena *arena)
 {
     // TODO(Sam): Actually read from a file
+    FILE *project_file_data = fopen("projects.4coder");
     
     project_file.project_array.count = 1;
     project_file.project_array.project_files = push_array(arena, Project_Line, 1);

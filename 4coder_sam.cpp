@@ -550,6 +550,7 @@ custom_setup_default_mapping(Application_Links* app, Mapping *mapping, Vim_Key v
     VimNameBind(string_u8_litexpr("Project"),                    vim_leader, vim_key(KeyCode_P));
     VimBind(project_lister,                                        vim_leader, vim_key(KeyCode_P), vim_key(KeyCode_P));
     VimBind(load_project,                                        vim_leader, vim_key(KeyCode_P), vim_key(KeyCode_O));
+    VimBind(list_all_locations, vim_leader, vim_key(KeyCode_P), vim_key(KeyCode_S));
     
     VimNameBind(string_u8_litexpr("Buffer"),                    vim_leader, vim_key(KeyCode_B));
     VimBind(interactive_switch_buffer,                           vim_leader, vim_key(KeyCode_B), vim_key(KeyCode_B));
@@ -566,6 +567,7 @@ custom_setup_default_mapping(Application_Links* app, Mapping *mapping, Vim_Key v
     
     VimNameBind(string_u8_litexpr("Search"),                     vim_leader, vim_key(KeyCode_S));
     VimBind(list_all_substring_locations_case_insensitive,       vim_leader, vim_key(KeyCode_S), vim_key(KeyCode_S));
+    VimBind(list_all_locations,       vim_leader, vim_key(KeyCode_S), vim_key(KeyCode_P));
     
     VimNameBind(string_u8_litexpr("Tags"),                       vim_leader, vim_key(KeyCode_T));
     VimBind(jump_to_definition,                                  vim_leader, vim_key(KeyCode_T), vim_key(KeyCode_A));
