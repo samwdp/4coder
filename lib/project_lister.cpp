@@ -141,16 +141,10 @@ parse_project_file(Application_Links *app, Arena *arena)
 function void
 set_project(Application_Links *app, Arena *arena, i32 index)
 {
-    List_String_Const_u8 arr = {};
     Project_Line proj = project_file->project_array.project_files[index];
-    config_feedback_string(arena, &arr, "dir", proj.dir);
-    config_feedback_string(arena, &arr, "name", proj.name);
-    config_feedback_string(arena, &arr, "proj", proj.project_file_name);
     File_Name_Data dump = dump_file_search_up_path(app, arena, proj.dir, proj.project_file_name);
     set_current_project_from_data(app, proj.project_file_name,
                                   dump.data, proj.dir);
-    String_Const_u8 message = string_list_flatten(arena, arr);
-    print_message(app, message);
 }
 
 function Project_Lister_Result
