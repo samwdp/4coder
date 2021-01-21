@@ -64,7 +64,7 @@ parse_project_file__config_data__version_1(Application_Links *app, Arena *arena,
                 b32 can_emit_command = true;
                 String_Const_u8 name = {};
                 String_Const_u8 dir = {};
-                String_Const_u8 project_file_name = {};
+                String_Const_u8 pf_name = {};
                 
                 //extract name
                 if (!config_compound_string_member(parsed, src, "name", 0, &name))
@@ -81,7 +81,7 @@ parse_project_file__config_data__version_1(Application_Links *app, Arena *arena,
                     goto finish_command;
                 }
                 
-                if (!config_compound_string_member(parsed, src, "project_file_name", 0, &project_file_name))
+                if (!config_compound_string_member(parsed, src, "project_file_name", 0, &pf_name))
                 {
                     can_emit_command = false;
                     config_add_error(arena, parsed, pos, "a command must have a string type name member");
@@ -90,7 +90,7 @@ parse_project_file__config_data__version_1(Application_Links *app, Arena *arena,
                 
                 dst->name = push_string_copy(arena, name);
                 dst->dir = push_string_copy(arena, dir);
-                dst->project_file_name = push_string_copy(arena, project_file_name);
+                dst->project_file_name = push_string_copy(arena, pf_name);
                 
                 finish_command:;
             }
