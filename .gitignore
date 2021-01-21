@@ -10,3 +10,7 @@ fonts/*
 LICENSE.txt
 README.txt
 themes/*
+.vscode/*
+vc140.pdb
+custom_4coder.pdb
+4ed_app.dll

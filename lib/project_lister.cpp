@@ -11,9 +11,15 @@ struct Project_Line_Array
     i32 count;
 };
 
-struct Project_File
+struct Project_File_Result
 {
     Project_Line_Array project_array;
+};
+
+struct Project_File_Parse_Result
+{
+    Config *parsed;
+    Project_File_Result *project_file;
 };
 
 struct Project_Lister_Result
@@ -23,59 +29,67 @@ struct Project_Lister_Result
 };
 
 /////////////////////////
-global char *project_file_path = "/home/sam/.bin/4coder/project.json";
-global Project_File project_file = {};
+global Project_File_Parse_Result project_file = {};
 
-function void add_project_to_file(Application_Links *app, Project *project, Arena *arena)
+function Project_File_Result*
+parse_project_file__config_data__version_1(Application_Links *app, Arena *arena, String_Const_u8 file_dir, Config *parsed)
 {
-    Project_Line_Array old = project_file.project_array;
-    project_file.project_array.count = old.count + 1;
-    project_file.project_array.project_files = push_array(arena, Project_Line, old.count + 1);
-    
-    Project_Line *project_line = project_file.project_array.project_files;
-    for(int i = 0; i < old.count; i++)
+    Project_File_Result *project = push_array_zero(arena, Project_File_Result, 1);
+
+    //load proj
     {
-        project_line->name = old.project_files[i].name;
-        project_line->dir = old.project_files[i].dir;
-        project_line->project_file_name = old.project_files[i].project_file_name;
+        Config_Compound *compound = 0;
+        if(config_compound_var(parsed, "projects", 0, &compound))
+        {
+            Config_Get_Result_List list = typed_compound_array_reference_list(arena, parsed, compound);
+            project->project_array.project_files = push_array(arena, Project_Line, list.count);
+        }
     }
-    if(project->loaded)
-    {
-        project_line[old.count].name = project->name;
-        project_line[old.count].dir = project->dir;
-        project_line[old.count].project_file_name = SCu8("project.4coder");
-    }
+
+    return(project);
 }
 
-function void parse_project_file(Application_Links *app, Arena *arena)
+function Project_File_Result*
+parse_project__data(Application_Links *app, Arena *arena, String_Const_u8 file_dir, Config *parsed)
 {
-    // TODO(Sam): Actually read from a file
-    File_Name_Data data = dump_file(arena, string_u8_litexpr("/home/sam/.bin/4coder_testing/project.file"));
-    
-    Token_Array array = token_array_from_text(app, arena, SCu8(data.data));
-    
-    if(array.tokens != 0)
-    {
-        print_message(app, SCu8(data.data));
+    i32 version = 0;
+    if (parsed->version != 0){
+        version = *parsed->version;
     }
-    // config_from_text -> Config struct
-    // Token_Array
-    project_file.project_array.count = 1;
-    project_file.project_array.project_files = push_array(arena, Project_Line, 1);
-    
-    Project_Line *project_line = project_file.project_array.project_files;
-    for(int i = 0; i < 1; i++)
-    {
-        project_line->name = SCu8("4coder");
-        project_line->dir = SCu8("/home/sam/.bin/4coder");
-        project_line->project_file_name = SCu8("project.4coder");
+
+    Project_File_Result *result = 0;
+    switch (version){
+        case 1:
+        {
+            result = parse_project_file__config_data__version_1(app, arena, file_dir, parsed);
+        }break;
     }
+    
+    return(result);
 }
+
+function Project_File_Parse_Result
+parse_project_file(Application_Links *app, Arena *arena)
+{
+    String_Const_u8 project_path = push_hot_directory(app, arena);
+    File_Name_Data dump = dump_file_search_up_path(app, arena, project_path, string_u8_litexpr("project.file"));
+    Project_File_Parse_Result result = {};
+    Token_Array array = token_array_from_text(app, arena, SCu8(dump.data));
+     if (array.tokens != 0){
+         result.parsed = config_parse(app, arena, dump.file_name, SCu8(dump.data), array);
+         if (result.parsed != 0){
+            String_Const_u8 project_root = string_remove_last_folder(dump.file_name);
+            result.project_file = parse_project__data(app, arena, project_root, result.parsed);
+         }
+    }
+    return(result);    
+}
+/////////////////////////
 
 function void
 set_project(Application_Links *app, Arena *arena, i32 index)
 {
-    Project_Line proj = project_file.project_array.project_files[index];
+    Project_Line proj = project_file.project_file->project_array.project_files[index];
     File_Name_Data dump = dump_file_search_up_path(app, arena, proj.dir, proj.project_file_name); 
     set_current_project_from_data(app, proj.project_file_name,
                                   dump.data, proj.dir);
@@ -91,9 +105,9 @@ get_projects_from_file(Application_Links *app, Arena *arena, String_Const_u8 que
     lister_set_default_handlers(lister);
     
     //load file
-    parse_project_file(app, arena);
-    Project_Line *project_line = project_file.project_array.project_files;
-    i32 count = project_file.project_array.count;
+    project_file = parse_project_file(app, arena);
+    Project_Line *project_line = project_file.project_file->project_array.project_files;
+    i32 count = project_file.project_file->project_array.count;
     for(i32 i = 0; i < count; i++)
     {
         lister_add_item(lister, project_line->name, project_line->dir, IntAsPtr(i), 0);
@@ -123,11 +137,4 @@ CUSTOM_DOC("Open a lister of all projects")
     if (proj.success){
         set_project(app, scratch, proj.index);
     }
-}
-
-CUSTOM_COMMAND_SIG(add_project_to_master)
-CUSTOM_DOC("Adds loaded project into master file")
-{
-    Scratch_Block scratch(app);
-    add_project_to_file(app, &current_project, scratch);
 }
