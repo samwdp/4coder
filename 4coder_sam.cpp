@@ -629,7 +629,7 @@ void custom_layer_init(Application_Links *app) {
                           mapid_code);
     //setup project file path
 #if OS_WINDOWS
-    project_file_path = string_u8_litexpr("/home/sam/.config/4coder");
+    project_file_path = string_u8_litexpr("C:\\Users\\samwd\\AppData\\Roaming\\4coder");
 #endif
 #if OS_LINUX
     project_file_path = string_u8_litexpr("/home/sam/.config/4coder");
