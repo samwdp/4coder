@@ -29,7 +29,7 @@ enable_undo_fade_out = true;
 // the cursor and mark's roundness as a percentage of their width
 // (At 50 the left and right corners will be so round they form a semi-circle,
 //  hence 50 is the max)
-cursor_roundness = 45;
+cursor_roundness = 10;
 
 // mark_thickness is a pixel count value setting the
 // thickness of the mark wire box in original mode
@@ -37,7 +37,7 @@ mark_thickness = 2;
 
 // lister_roundess is a value [0,50] setting the radius of
 // the lister items' roundness as a percentage of their height
-lister_roundness = 20;
+lister_roundness = 5;
 
 // Code Wrapping
 treat_as_code = ".cpp.c.hpp.h.cc.cs.java.rs.glsl.m.mm";

@@ -1,6 +1,5 @@
 #if !defined(FCODER_DEFAULT_BINDINGS_CPP)
 #define FCODER_DEFAULT_BINDINGS_CPP
-
 #include "4coder_default_include.cpp"
 
 #include "lib/external/4coder-clearfeld/packages/relative_line_number_mode/relative_line_number_mode.cpp"
@@ -339,7 +338,7 @@ custom_setup_default_mapping(Application_Links* app, Mapping *mapping, Vim_Key v
     Bind(vim_backspace_char,                                  KeyCode_Backspace);
     Bind(comment_line_toggle,                                 KeyCode_Semicolon, KeyCode_Control);
     Bind(word_complete,                                       KeyCode_Tab);
-    // Bind(word_complete_drop_down,                             KeyCode_N, KeyCode_Control);
+    Bind(word_complete_drop_down,                             KeyCode_Space, KeyCode_Control);
     Bind(auto_indent_range,                                   KeyCode_Tab, KeyCode_Control);
     Bind(auto_indent_line_at_cursor,                          KeyCode_Tab, KeyCode_Shift);
     Bind(word_complete_drop_down,                             KeyCode_Tab, KeyCode_Shift, KeyCode_Control);
@@ -542,6 +541,7 @@ custom_setup_default_mapping(Application_Links* app, Mapping *mapping, Vim_Key v
     VimBind(vim_open_file_in_quotes_in_same_window,              vim_key(KeyCode_G), vim_key(KeyCode_F));
     VimBind(vim_jump_to_definition_under_cursor,                 vim_key(KeyCode_RightBracket, KeyCode_Control));
     
+    VimBind(word_complete_drop_down, vim_key(KeyCode_Period, KeyCode_Control));
     VimNameBind(string_u8_litexpr("Project"),                    vim_leader, vim_key(KeyCode_P));
     VimBind(project_lister,                                        vim_leader, vim_key(KeyCode_P), vim_key(KeyCode_P));
     VimBind(load_project,                                        vim_leader, vim_key(KeyCode_P), vim_key(KeyCode_O));

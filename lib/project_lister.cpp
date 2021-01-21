@@ -161,6 +161,7 @@ set_project(Application_Links *app, Arena *arena, i32 index)
     File_Name_Data dump = dump_file_search_up_path(app, arena, proj.dir, proj.project_file_name);
     set_current_project_from_data(app, proj.project_file_name,
                                   dump.data, proj.dir);
+    set_hot_directory(app, proj.dir);
 }
 
 function Project_Lister_Result
