@@ -1,4 +1,22 @@
 projects = {
-	{ name = "4coder", dir = "/home/sam/.bin/4coder", project_file_name = "project.4coder" },
-	{ name = "4coder_testing", dir = "/home/sam/.bin/4coder_testing", project_file_name = "project.4coder" }
-}
+	{ 
+		.name = "4coder_linux", 
+		.dir = "/home/sam/.bin/4coder", 
+		.project_file_name = "project.4coder"
+	},
+	{ 
+		.name = "4coder_windows", 
+		.dir = "C:\\Users\\SamPrecious\\bin\\4coder", 
+		.project_file_name = "project.4coder" 
+	},
+	{ 
+		.name = "4coder_testing_linux", 
+		.dir = "/home/sam/.bin/4coder_testing", 
+		.project_file_name = "project.4coder"
+	},
+	{ 
+		.name = "4coder_testing_windows", 
+		.dir = "C:\\Users\\SamPrecious\\bin\\4coder_testing", 
+		.project_file_name = "project.4coder" 
+	},
+};
