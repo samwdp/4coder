@@ -69,23 +69,16 @@ function void add_project_to_file(Application_Links *app, Project *project, Aren
 function void parse_project_file(Application_Links *app, Arena *arena)
 {
     // TODO(Sam): Actually read from a file
-    FILE *projects = fopen(project_file_path, "r");
+    File_Name_Data data = dump_file(arena, string_u8_litexpr("/home/sam/.bin/4coder_testing/project.file"));
     
-    char *json_file;
-    long length;
-    if (projects)
+    Token_Array array = token_array_from_text(app, arena, SCu8(data.data));
+    
+    if(array.tokens != 0)
     {
-        fseek (projects, 0, SEEK_END);
-        length = ftell (projects);
-        fseek (projects, 0, SEEK_SET);
-        json_file = (char*)malloc ((length+1)*sizeof(char));
-        if (json_file)
-        {
-            fread (json_file, sizeof(char), length, projects);
-        }
-        fclose (projects);
+        print_message(app, SCu8(data.data));
     }
-    
+    // config_from_text -> Config struct
+    // Token_Array
     project_file.project_array.count = 1;
     project_file.project_array.project_files = push_array(arena, Project_Line, 1);
     
