@@ -620,15 +620,23 @@ custom_setup_default_mapping(Application_Links* app, Mapping *mapping, Vim_Key v
 void custom_layer_init(Application_Links *app) {
     Thread_Context *tctx = get_thread_context(app);
     
-    // NOTE(allen): setup for default framework
     default_framework_init(app);
     
-    // NOTE(allen): default hooks and command maps
     set_all_default_hooks(app);
     mapping_init(tctx, &framework_mapping);
     
     setup_default_mapping(&framework_mapping, mapid_global, mapid_file,
                           mapid_code);
+    //setup project file path
+#if OS_WINDOWS
+    project_file_path = string_u8_litexpr("/home/sam/.config/4coder");
+#endif
+#if OS_LINUX
+    project_file_path = string_u8_litexpr("/home/sam/.config/4coder");
+#endif    
+#if OS_MAC
+    project_file_path = string_u8_litexpr("/home/sam/.config/4coder");
+#endif
     vim_init(app);
     vim_set_default_hooks(app);
     custom_setup_default_mapping(app, &framework_mapping, vim_key(KeyCode_Space));

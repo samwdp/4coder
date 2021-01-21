@@ -14,7 +14,7 @@ struct Project_Line_Array
 struct Project_File_Result
 {
     b32 loaded;
-
+    
     String_Const_u8 dir;
     Project_Line_Array project_array;
 };
@@ -33,26 +33,26 @@ struct Project_Lister_Result
 
 /////////////////////////
 global Project_File_Result *project_file = {};
+global String_Const_u8 project_file_path;
 
 function Project_File_Result *
 parse_project_file__config_data__version_1(Application_Links *app, Arena *arena, String_Const_u8 file_dir, Config *parsed)
 {
     Project_File_Result *project = push_array_zero(arena, Project_File_Result, 1);
-
+    
     project->dir = push_string_copy(arena, file_dir);
     //load proj
     {
         Config_Compound *compound = 0;
         if (config_compound_var(parsed, "projects", 0, &compound))
         {
-            print_message(app, string_u8_litexpr("found projects \n"));
             Config_Get_Result_List list = typed_compound_array_reference_list(arena, parsed, compound);
-
+            
             project->project_array.project_files = push_array(arena, Project_Line, list.count);
             project->project_array.count = list.count;
-
+            
             Project_Line *dst = project->project_array.project_files;
-
+            
             for (Config_Get_Result_Node *node = list.first;
                  node != 0;
                  node = node->next, ++dst)
@@ -64,7 +64,7 @@ parse_project_file__config_data__version_1(Application_Links *app, Arena *arena,
                 String_Const_u8 name = {};
                 String_Const_u8 dir = {};
                 String_Const_u8 project_file_name = {};
-
+                
                 //extract name
                 if (!config_compound_string_member(parsed, src, "name", 0, &name))
                 {
@@ -72,26 +72,26 @@ parse_project_file__config_data__version_1(Application_Links *app, Arena *arena,
                     config_add_error(arena, parsed, pos, "a command must have a string type name member");
                     goto finish_command;
                 }
-
+                
                 if (!config_compound_string_member(parsed, src, "dir", 0, &dir))
                 {
                     can_emit_command = false;
                     config_add_error(arena, parsed, pos, "a command must have a string type name member");
                     goto finish_command;
                 }
-
+                
                 if (!config_compound_string_member(parsed, src, "project_file_name", 0, &project_file_name))
                 {
                     can_emit_command = false;
                     config_add_error(arena, parsed, pos, "a command must have a string type name member");
                     goto finish_command;
                 }
-
+                
                 dst->name = push_string_copy(arena, name);
                 dst->dir = push_string_copy(arena, dir);
                 dst->project_file_name = push_string_copy(arena, project_file_name);
-
-            finish_command:;
+                
+                finish_command:;
             }
         }
     }
@@ -103,25 +103,28 @@ function Project_File_Result *
 parse_project__data(Application_Links *app, Arena *arena, String_Const_u8 file_dir, Config *parsed)
 {
     i32 version = 1;
-
+    
     Project_File_Result *result = 0;
     switch (version)
     {
-    case 1:
-    {
-        result = parse_project_file__config_data__version_1(app, arena, file_dir, parsed);
+        case 1:
+        {
+            result = parse_project_file__config_data__version_1(app, arena, file_dir, parsed);
+        }
+        break;
     }
-    break;
-    }
-
+    
     return (result);
 }
 
 function Project_File_Parse_Result
 parse_project_file(Application_Links *app, Arena *arena)
 {
-    String_Const_u8 project_path = push_hot_directory(app, arena);
-    File_Name_Data dump = dump_file_search_up_path(app, arena, project_path, string_u8_litexpr("project.file"));
+    if(project_file_path.size == 0)
+    {
+        project_file_path = push_hot_directory(app, arena);
+    }
+    File_Name_Data dump = dump_file_search_up_path(app, arena, project_file_path, string_u8_litexpr("project.file"));
     Project_File_Parse_Result result = {};
     Token_Array array = token_array_from_text(app, arena, SCu8(dump.data));
     if (array.tokens != 0)
@@ -151,11 +154,11 @@ function Project_Lister_Result
 get_projects_from_file(Application_Links *app, Arena *arena, String_Const_u8 query)
 {
     Project_Lister_Result result = {};
-
+    
     Lister_Block lister(app, arena);
     lister_set_query(lister, query);
     lister_set_default_handlers(lister);
-
+    
     //load file
     Project_File_Parse_Result project_file_result = parse_project_file(app, arena);
     Project_Line *project_line = project_file->project_array.project_files;
@@ -164,14 +167,14 @@ get_projects_from_file(Application_Links *app, Arena *arena, String_Const_u8 que
     {
         lister_add_item(lister, project_line->name, project_line->dir, IntAsPtr(i), 0);
     }
-
+    
     Lister_Result l_result = run_lister(app, lister);
     if (!l_result.canceled)
     {
         result.success = true;
         result.index = (i32)PtrAsInt(l_result.user_data);
     }
-
+    
     return (result);
 }
 
