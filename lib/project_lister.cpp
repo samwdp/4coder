@@ -22,25 +22,6 @@ struct Project_Lister_Result
     i32 index;
 };
 
-struct sam_project_line
-{
-    char *dir;
-    char *name;
-    char *project_file_name
-};
-
-struct sam_project_array
-{
-    sam_project_line *project_lines;
-    i32 count;
-};
-
-struct sam_project
-{
-    
-};
-
-
 /////////////////////////
 global char *project_file_path = "/home/sam/.bin/4coder/project.json";
 global Project_File project_file = {};
