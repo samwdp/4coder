@@ -1,0 +1,12 @@
+projects = {
+	{ 
+		.name = "4coder", 
+		.dir = "C:\\Users\\SamPrecious\\bin\\4coder", 
+		.project_file_name = "project.4coder"
+	},
+	{ 
+		.name = "4coder_testing", 
+		.dir = "C:\\Users\\SamPrecious\\bin\\4coder_testing", 
+		.project_file_name = "project.4coder"
+	},
+};

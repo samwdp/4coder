@@ -34,6 +34,7 @@ struct Project_Lister_Result
 /////////////////////////
 global Project_File_Result *project_file = {};
 global String_Const_u8 project_file_path;
+global String_Const_u8 project_file_name;
 
 function Project_File_Result *
 parse_project_file__config_data__version_1(Application_Links *app, Arena *arena, String_Const_u8 file_dir, Config *parsed)
@@ -124,7 +125,19 @@ parse_project_file(Application_Links *app, Arena *arena)
     {
         project_file_path = push_hot_directory(app, arena);
     }
-    File_Name_Data dump = dump_file_search_up_path(app, arena, project_file_path, string_u8_litexpr("project.file"));
+    if(project_file_name.size == 0)
+    {
+#if OS_WINDOWS
+        project_file_name = string_u8_litexpr("project.windows");
+#endif
+#if OS_LINUX
+        project_file_name = string_u8_litexpr("project.linux");
+#endif
+#if OS_MAC
+        project_file_name = string_u8_litexpr("project.mac");
+#endif
+    }
+    File_Name_Data dump = dump_file_search_up_path(app, arena, project_file_path, project_file_name);
     Project_File_Parse_Result result = {};
     Token_Array array = token_array_from_text(app, arena, SCu8(dump.data));
     if (array.tokens != 0)
